@@ -16,7 +16,8 @@
 
    <!-- Content -->
    {{ .Content }}
-   <div class="time">
+   {{ if not .Date.IsZero }}
+   <div class="time">   
      {{ partial "date.html" .Date }}
      {{ $showReadingTime := .Params.showreadingtime | default site.Params.showreadingtime | default true }}
      {{ if and $showReadingTime .ReadingTime }}
@@ -29,6 +30,7 @@
        {{ end }}
      {{ end }}
    </div>
+   {{ end }}
 
   <!-- Comments block -->
   {{ if and .Content (default true (default .Site.Params.comments
