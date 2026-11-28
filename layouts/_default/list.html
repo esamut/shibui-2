@@ -1,13 +1,37 @@
 {{ define "main" }}
     <h1>{{ .Title }}</h1>
     {{ .Content }}
+
+    {{ $pages := .Pages }}
+    {{ $sortBy := .Params.sortby | default "default" }}
+    {{ $showDate := .Params.showdate | default true }}
+
+    {{ if eq $sortBy "title" }}
+        {{ $pages = $pages.ByLinkTitle }}
+    {{ else if eq $sortBy "date" }}
+        {{ $pages = $pages.ByDate.Reverse }}
+    {{ else if eq $sortBy "weight" }}
+        {{ $pages = $pages.ByWeight }}
+    {{ end }}
+
     <table class="time-list">
         <tbody>
-            {{ range .Pages }}
-            <tr>
-                <td class="time-list__date">{{- partial "date" .Date -}}</td>
-                <td class="time-list__title"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></td>
-            </tr>
+            {{ range $pages }}
+                <tr>
+                    {{ if $showDate }}
+                        <td class="time-list__date">
+                            {{ if not .Date.IsZero }}
+                                {{ partial "date" .Date }}
+                            {{ end }}
+                        </td>
+                    {{ end }}
+
+                    <td class="time-list__title">
+                        <a href="{{ .RelPermalink }}">
+                            {{ .LinkTitle }}
+                        </a>
+                    </td>
+                </tr>
             {{ end }}
         </tbody>
     </table>
