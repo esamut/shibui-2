@@ -5,6 +5,10 @@
     {{ $pages := .Pages }}
     {{ $sortBy := .Params.sortby | default "default" }}
     {{ $showDate := .Params.showdate | default true }}
+    {{ if and (in (slice "taxonomy" "term") .Kind) (eq .Data.Plural "tags") }}
+        {{ $showDate = false }}
+    {{ end }}
+
     {{ $groupByYear := and (.Params.groupbyyear | default false) $showDate (eq $sortBy "date") }}
 
     {{ if eq $sortBy "title" }}
