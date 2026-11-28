@@ -1,0 +1,4 @@
+{{- transform.ToMath .Inner (dict
+    "displayMode" (eq .Type "block")
+    "output" "htmlAndMathml"
+) -}}
