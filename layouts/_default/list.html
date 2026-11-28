@@ -5,6 +5,7 @@
     {{ $pages := .Pages }}
     {{ $sortBy := .Params.sortby | default "default" }}
     {{ $showDate := .Params.showdate | default true }}
+    {{ $groupByYear := and (.Params.groupbyyear | default false) $showDate (eq $sortBy "date") }}
 
     {{ if eq $sortBy "title" }}
         {{ $pages = $pages.ByLinkTitle }}
@@ -14,14 +15,35 @@
         {{ $pages = $pages.ByWeight }}
     {{ end }}
 
+    {{ $previousYear := "" }}
+
     <table class="time-list">
         <tbody>
             {{ range $pages }}
+
+                {{ if and $groupByYear (not .Date.IsZero) }}
+                    {{ $year := .Date.Format "2006" }}
+                    {{ if ne $year $previousYear }}
+                        <tr>
+                            <td colspan="2">
+                                <strong>{{ $year }}</strong>
+                            </td>
+                        </tr>
+                        {{ $previousYear = $year }}
+                    {{ end }}
+                {{ end }}
+
                 <tr>
                     {{ if $showDate }}
                         <td class="time-list__date">
                             {{ if not .Date.IsZero }}
-                                {{ partial "date" .Date }}
+                                {{ if $groupByYear }}
+                                    <time datetime="{{ .Date.Format "2006-01-02" }}">
+                                        {{ .Date.Format "Jan 02" }}
+                                    </time>
+                                {{ else }}
+                                    {{ partial "date" .Date }}
+                                {{ end }}
                             {{ end }}
                         </td>
                     {{ end }}
