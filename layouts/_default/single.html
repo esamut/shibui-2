@@ -1,5 +1,7 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
+  {{ if (.Params.showtitle | default true) }}
+    <h1>{{ .Title }}</h1>
+  {{ end }}
   {{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}
 
   {{/* Table of Contents */}}
