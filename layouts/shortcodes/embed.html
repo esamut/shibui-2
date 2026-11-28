@@ -1,0 +1,7 @@
+{{ $path := .Get 0 }}
+
+{{ with .Page.Site.GetPage $path }}
+    {{ .Content }}
+{{ else }}
+    {{ errorf "Could not embed page %q" $path }}
+{{ end }}
